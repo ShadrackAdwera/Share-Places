@@ -5,13 +5,14 @@ import { NavLink } from 'react-router-dom';
 import './NavLinks.css';
 
 const NavLinks = (props) => {
+  
   return (
     <ul className="nav-links">
       <li>
         <NavLink to="/" exact>All Users</NavLink>
       </li>
       <li>
-        <NavLink to="/users/:id/places">My Places</NavLink>
+        <NavLink to="/users/u2/places">My Places</NavLink>
       </li>
       <li>
         <NavLink to="/places/new">New Places</NavLink>
