@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 
 import MainHeader from '../MainHeader/MainHeader'
 
+import NavLinks from '../NavLinks/NavLinks'
+
 import './MainNavigation.css'
 
 const MainNavigation = props => {
@@ -20,7 +22,7 @@ const MainNavigation = props => {
                 </Link>
             </h1>
             <nav>
-                ... 
+                <NavLinks />
             </nav>
         </MainHeader>
     )
