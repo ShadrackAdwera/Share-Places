@@ -18,7 +18,7 @@ const UserItem = (props) => {
                 <Avi image={props.image} alt={props.name} />
               </div>
               <div className="user-item__info">
-                <h2>{props.name}</h2>
+                <h2><strong>{props.name}</strong></h2>
                 <h3>
                   {props.placeCount}{' '}
                   {props.placeCount === 1 ? 'Place' : 'Places'}
