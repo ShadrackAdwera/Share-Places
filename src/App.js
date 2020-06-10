@@ -1,7 +1,19 @@
 import React from 'react';
 
-function App() {
-  return <h1>Let's start!</h1>;
+import { Route, Redirect, Switch } from 'react-router-dom'
+
+import Users from './user/pages/Users'
+
+import NewPlaces from './places/pages/NewPlace'
+
+const App = () => {
+  return (
+      <Switch>
+      <Route exact path='/' component={Users}/>
+      <Route exact path='/places/new' component={NewPlaces}/>
+      <Redirect to = '/'/>
+      </Switch>
+  )
 }
 
 export default App;
