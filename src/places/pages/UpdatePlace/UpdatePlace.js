@@ -6,6 +6,8 @@ import Input from '../../../shared/components/UIElements/FormElements/Inputs/Inp
 
 import Button from '../../../shared/components/UIElements/FormElements/Button/Button';
 
+import Card from '../../../shared/components/UIElements/Card/Card';
+
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -71,25 +73,29 @@ const UpdatePlace = () => {
   if (!identifiedPlace) {
     return (
       <div className="center">
-        <p>Could not find place</p>
+        <Card>
+        <h4>Could not find place</h4>
+        </Card>
       </div>
     );
   }
 
   useEffect(() => {
-    setFormData(
-      {
-        title: {
-          value: identifiedPlace.title,
-          isValid: true,
+    if(identifiedPlace){
+      setFormData(
+        {
+          title: {
+            value: identifiedPlace.title,
+            isValid: true,
+          },
+          description: {
+            value: identifiedPlace.description,
+            isValid: true,
+          },
         },
-        description: {
-          value: identifiedPlace.description,
-          isValid: true,
-        },
-      },
-      true
-    );
+        true
+      );
+    }
     setIsLoading(false);
   }, [setFormData, identifiedPlace]);
 

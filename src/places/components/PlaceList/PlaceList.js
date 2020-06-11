@@ -4,6 +4,8 @@ import Card from '../../../shared/components/UIElements/Card/Card';
 
 import PlaceItem from '../PlaceItem/PlaceItem';
 
+import Button from '../../../shared/components/UIElements/FormElements/Button/Button'
+
 import './PlaceList.css';
 
 const PlaceList = (props) => {
@@ -12,7 +14,7 @@ const PlaceList = (props) => {
       <div className="place-list center">
         <Card>
           <h2>No places available. Create one maybe?</h2>
-          <button>Share Place</button>
+          <Button to='/places/new'>Go to create place</Button>
         </Card>
       </div>
     );
