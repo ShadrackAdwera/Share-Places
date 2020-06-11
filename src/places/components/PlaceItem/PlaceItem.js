@@ -47,7 +47,7 @@ const PlaceItem = (props) => {
           </div>
           <div className="place-item__actions">
             <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-            <Button to={`/places/${props.id}`}>EDIT LOCATION</Button>
+            <Button to={`/places/${props.id}/update`}>EDIT LOCATION</Button>
             <Button danger>DELETE LOCATION</Button>
           </div>
         </Card>
