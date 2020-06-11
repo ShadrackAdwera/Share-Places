@@ -1,7 +1,13 @@
 import React from 'react'
 
+import Input from '../../../shared/components/UIElements/FormElements/Inputs/Input'
+
+import './NewPlace.css'
+
 const NewPlace = () => {
-return <h2>New Place inadi area</h2>
+return <form className='place-form'>
+    <Input element='input' type='text' label='Title'/>
+</form>
 }
 
 export default NewPlace
