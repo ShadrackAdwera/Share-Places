@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 
@@ -6,11 +6,14 @@ import Input from '../../../shared/components/UIElements/FormElements/Inputs/Inp
 
 import Button from '../../../shared/components/UIElements/FormElements/Button/Button';
 
-import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../../shared/utils/Validators';
+import {
+  VALIDATOR_REQUIRE,
+  VALIDATOR_MINLENGTH,
+} from '../../../shared/utils/Validators';
 
-import { useForm } from '../../../shared/hooks/form-hook'
+import { useForm } from '../../../shared/hooks/form-hook';
 
-import '../NewPlaces/PlaceForm.css'
+import '../NewPlaces/PlaceForm.css';
 
 const DUMMY_PLACES = [
   {
@@ -45,8 +48,23 @@ const DUMMY_PLACES = [
 ];
 
 const UpdatePlace = () => {
+  const [isLoading, setIsLoading] = useState(true);
 
   const placeId = useParams().placeId;
+
+  const [formState, inputHandler, setFormData] = useForm(
+    {
+      title: {
+        value: '',
+        isValid: false,
+      },
+      description: {
+        value: '',
+        isValid: false,
+      },
+    },
+    false
+  );
 
   const identifiedPlace = DUMMY_PLACES.find((p) => p.id === placeId);
 
@@ -58,24 +76,38 @@ const UpdatePlace = () => {
     );
   }
 
-  const [formState, inputHandler] = useForm({
-    title: {
-        value: identifiedPlace.title,
-        isValid: true
-    },
+  useEffect(() => {
+    setFormData(
+      {
+        title: {
+          value: identifiedPlace.title,
+          isValid: true,
+        },
         description: {
-            value: identifiedPlace.description,
-            isValid: true
-        }
-}, true)
+          value: identifiedPlace.description,
+          isValid: true,
+        },
+      },
+      true
+    );
+    setIsLoading(false);
+  }, [setFormData, identifiedPlace]);
 
-const updateSubmitHandler = event => {
-    event.preventDefault()
-    console.log(formState.inputs)
-}
+  const updateSubmitHandler = (event) => {
+    event.preventDefault();
+    console.log(formState.inputs);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="center">
+        <h3>Loading...</h3>
+      </div>
+    );
+  }
 
   return (
-    <form className='place-form' onSubmit={updateSubmitHandler}>
+    <form className="place-form" onSubmit={updateSubmitHandler}>
       <Input
         type="text"
         id="title"
@@ -97,7 +129,9 @@ const updateSubmitHandler = event => {
         value={formState.inputs.description.value}
         valid={formState.inputs.description.isValid}
       />
-      <Button type='submit' disabled={!formState.isValid}>UPDATE PLACE</Button>
+      <Button type="submit" disabled={!formState.isValid}>
+        UPDATE PLACE
+      </Button>
     </form>
   );
 };
