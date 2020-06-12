@@ -32,7 +32,7 @@ const PlaceItem = (props) => {
 
   const confirmDeleteHandler = () => {
     console.log('DELETED...')
-    //setShowConfirmModal(false)
+    setShowConfirmModal(false)
   }
 
   return (
