@@ -35,6 +35,7 @@ const App = () => {
         <Route exact path="/users/:id/places" component={UserPlaces} />
         <Route exact path="/places/new" component={NewPlaces} />
         <Route exact path="/places/:placeId/update" component={UpdatePlace} />
+        <Route exact path='/logout' component={Users} />
         <Redirect to="/" />
       </Switch>
     );
