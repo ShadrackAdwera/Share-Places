@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import Input from '../../../shared/components/UIElements/FormElements/Inputs/Input';
 
@@ -11,11 +11,14 @@ import { useForm } from '../../../shared/hooks/form-hook';
 import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_EMAIL,
+  VALIDATOR_REQUIRE,
 } from '../../../shared/utils/Validators';
 
 import './Auth.css';
 
 const Auth = () => {
+  const [isLogin, setIsLogin] = useState(true);
+
   const [formState, inputHandler] = useForm(
     {
       email: {
@@ -35,11 +38,27 @@ const Auth = () => {
     console.log(formState.inputs);
   };
 
+  const switchModeHandler = () => {
+    setIsLogin((prevMode) => !prevMode);
+  };
+
   return (
     <Card className="authentication">
-      <h3>Login Required</h3>
+      <h3>Authentication Required</h3>
       <hr />
       <form onSubmit={authSubmitHandler}>
+        {!isLogin && (
+          <Input
+            element="input"
+            id="name"
+            type="text"
+            label="UserName"
+            validators={VALIDATOR_REQUIRE()}
+            errorText="Enter a name"
+            onInput={inputHandler}
+            placeholder='eg. @deezNuts'
+          />
+        )}
         <Input
           id="email"
           type="email"
@@ -61,9 +80,12 @@ const Auth = () => {
           validators={[VALIDATOR_MINLENGTH(6)]}
         />
         <Button type="submit" disabled={!formState.isValid}>
-          SIGN IN
+          {isLogin ? 'LOG IN' : 'CREATE ACCOUNT'}
         </Button>
       </form>
+      <Button inverse onClick={switchModeHandler}>
+        GO TO {isLogin ? 'SIGN UP' : 'LOG IN'}
+      </Button>
     </Card>
   );
 };
