@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import Input from '../../../shared/components/UIElements/FormElements/Inputs/Input';
 
@@ -19,7 +19,7 @@ import './Auth.css';
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
 
-  const [formState, inputHandler] = useForm(
+  const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
         value: '',
@@ -39,6 +39,23 @@ const Auth = () => {
   };
 
   const switchModeHandler = () => {
+    if (!isLogin) {
+      setFormData(
+        { ...formState.inputs, name: undefined },
+        formState.inputs.email.isValid && formState.inputs.password.isValid
+      );
+    } else {
+      setFormData(
+        {
+          ...formState.inputs,
+          name: {
+            value: '',
+            isValid: false,
+          },
+        },
+        false
+      );
+    }
     setIsLogin((prevMode) => !prevMode);
   };
 
@@ -53,10 +70,10 @@ const Auth = () => {
             id="name"
             type="text"
             label="UserName"
-            validators={VALIDATOR_REQUIRE()}
+            validators={[VALIDATOR_REQUIRE()]}
             errorText="Enter a name"
             onInput={inputHandler}
-            placeholder='eg. @deezNuts'
+            placeholder="eg. @deezNuts"
           />
         )}
         <Input
