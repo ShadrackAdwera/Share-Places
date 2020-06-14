@@ -63,8 +63,11 @@ const Auth = () => {
           password: formState.inputs.password.value
         })
       })
-      const data = await response.json()
-      console.log(data)
+      const responseData = await response.json()
+      if(!response.ok) {
+        throw new Error(responseData.message)
+      }
+      console.log(responseData)
       setIsLoading(false)
       auth.login()
       } catch (error) {
@@ -72,8 +75,6 @@ const Auth = () => {
         setError(error.message || 'Auth failed!')
       }
     }
-
-    auth.login()
   };
 
   const switchModeHandler = () => {
@@ -97,7 +98,13 @@ const Auth = () => {
     setIsLogin((prevMode) => !prevMode);
   };
 
+  const errorHandler = () => {
+    setError(null)
+  }
+
   return (
+    <React.Fragment>
+      <ErrorModal error={error} onClear={errorHandler}/>
     <Card className="authentication">
       {isLoading && <Spinner asOverlay/>}
       <h3>Authentication Required</h3>
@@ -143,6 +150,7 @@ const Auth = () => {
         GO TO {isLogin ? 'SIGN UP' : 'LOG IN'}
       </Button>
     </Card>
+    </React.Fragment>
   );
 };
 
