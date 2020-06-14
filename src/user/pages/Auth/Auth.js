@@ -10,6 +10,10 @@ import { useForm } from '../../../shared/hooks/form-hook';
 
 import {AuthContext} from '../../../shared/context/auth-context'
 
+import Spinner from '../../../shared/components/UIElements/Error/LoadingSpinner'
+
+import ErrorModal from '../../../shared/components/UIElements/Error/ErrorModal'
+
 import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_EMAIL,
@@ -23,6 +27,8 @@ const Auth = () => {
   const auth = useContext(AuthContext)
 
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState()
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -45,6 +51,7 @@ const Auth = () => {
 
     } else {
       try {
+        setIsLoading(true)
         const response = await fetch('http://localhost:5000/api/users/signup',{
         method: 'POST',
         headers: {
@@ -58,8 +65,11 @@ const Auth = () => {
       })
       const data = await response.json()
       console.log(data)
+      setIsLoading(false)
+      auth.login()
       } catch (error) {
-        console.log(error)
+        setIsLoading(false)
+        setError(error.message || 'Auth failed!')
       }
     }
 
@@ -89,6 +99,7 @@ const Auth = () => {
 
   return (
     <Card className="authentication">
+      {isLoading && <Spinner asOverlay/>}
       <h3>Authentication Required</h3>
       <hr />
       <form onSubmit={authSubmitHandler}>
