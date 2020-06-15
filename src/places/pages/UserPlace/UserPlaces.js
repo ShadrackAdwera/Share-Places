@@ -27,7 +27,7 @@ const UserPlaces = (props) => {
       }
     };
     fetchPlaces();
-  }, [sendRequest]);
+  }, [sendRequest, userId]);
 
   return (
     <React.Fragment>
@@ -37,7 +37,7 @@ const UserPlaces = (props) => {
         </div>
       )}
       <ErrorModal error={error} onClear={clearError} />
-      <PlaceList items={loadedPlaces} />)
+      {!isLoading && loadedPlaces && <PlaceList items={loadedPlaces} />})
     </React.Fragment>
   );
 };

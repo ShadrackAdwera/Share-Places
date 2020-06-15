@@ -10,14 +10,23 @@ import Map from '../../../shared/components/UIElements/Map/Map'
 
 import { AuthContext } from '../../../shared/context/auth-context'
 
+import { useHttpClient } from '../../../shared/hooks/http-hook'
+
+import Spinner from '../../../shared/components/UIElements/Error/LoadingSpinner'
+
+import ErrorModal from '../../../shared/components/UIElements/Error/ErrorModal'
+
 import './PlaceItem.css';
+import { useParams } from 'react-router-dom';
 
 const PlaceItem = (props) => {
 
   const auth = useContext(AuthContext)
-
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const userId = useParams().userId
+  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+
 
   const openMapHandler = () => {
     setShowMap(true);
@@ -35,13 +44,19 @@ const PlaceItem = (props) => {
     setShowConfirmModal(false)
   }
 
-  const confirmDeleteHandler = () => {
-    console.log('DELETED...')
+  const confirmDeleteHandler = async () => {
+    try {
+      await sendRequest(`http://localhost:5000/api/places/${userId}`, 'DELETE')
+
+    } catch (error) {
+      console.log(error)
+    }
     setShowConfirmModal(false)
   }
 
   return (
     <React.Fragment>
+      {isLoading && <Spinner asOverlay/>}
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
@@ -62,6 +77,7 @@ const PlaceItem = (props) => {
       }>
         <h4>This action cannot be undone?</h4>
       </Modal>
+      <ErrorModal error={error} onClear={clearError} />
       <li className="place-item">
         <Card className="place-item__content">
           <div className="place-item__image">
