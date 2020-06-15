@@ -22,6 +22,8 @@ import {
   VALIDATOR_REQUIRE,
 } from '../../../shared/utils/Validators';
 
+import ImageUpload from '../../../shared/components/UIElements/FormElements/Image/ImageUpload'
+
 import './Auth.css';
 
 const Auth = () => {
@@ -110,6 +112,7 @@ const Auth = () => {
         <h3>Authentication Required</h3>
         <hr />
         <form onSubmit={authSubmitHandler}>
+        {!isLogin && <ImageUpload id='image' center/>}
           {!isLogin && (
             <Input
               element="input"
