@@ -6,27 +6,23 @@ import Button from '../../../shared/components/UIElements/FormElements/Button/Bu
 
 import Modal from '../../../shared/components/UIElements/Modal/Modal';
 
-import Map from '../../../shared/components/UIElements/Map/Map'
+import Map from '../../../shared/components/UIElements/Map/Map';
 
-import { AuthContext } from '../../../shared/context/auth-context'
+import { useHttpClient } from '../../../shared/hooks/http-hook';
 
-import { useHttpClient } from '../../../shared/hooks/http-hook'
+import { AuthContext } from '../../../shared/context/auth-context';
 
-import Spinner from '../../../shared/components/UIElements/Error/LoadingSpinner'
+import Spinner from '../../../shared/components/UIElements/Error/LoadingSpinner';
 
-import ErrorModal from '../../../shared/components/UIElements/Error/ErrorModal'
+import ErrorModal from '../../../shared/components/UIElements/Error/ErrorModal';
 
 import './PlaceItem.css';
-import { useParams } from 'react-router-dom';
 
 const PlaceItem = (props) => {
-
-  const auth = useContext(AuthContext)
   const [showMap, setShowMap] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false)
-  const userId = useParams().userId
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
-
+  const auth = useContext(AuthContext);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const openMapHandler = () => {
     setShowMap(true);
@@ -37,26 +33,29 @@ const PlaceItem = (props) => {
   };
 
   const showDeleteWarningHandler = () => {
-    setShowConfirmModal(true)
-  }
+    setShowConfirmModal(true);
+  };
 
   const cancelDeleteHandler = () => {
-    setShowConfirmModal(false)
-  }
+    setShowConfirmModal(false);
+  };
 
   const confirmDeleteHandler = async () => {
+    setShowConfirmModal(false);
     try {
-      await sendRequest(`http://localhost:5000/api/places/${userId}`, 'DELETE')
-
+      await sendRequest(
+        `http://localhost:5000/api/places/${props.id}`,
+        'DELETE'
+      );
+      props.onDelete(props.id);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    setShowConfirmModal(false)
-  }
+  };
 
   return (
     <React.Fragment>
-      {isLoading && <Spinner asOverlay/>}
+      <ErrorModal error={error} onClear={clearError} />
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
@@ -65,21 +64,31 @@ const PlaceItem = (props) => {
         footerClass="place-item__modal-actions"
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
       >
-        <div className='map-container'>
-          <Map center={props.coordinates} zoom={16}/>
+        <div className="map-container">
+          <Map center={props.coordinates} zoom={16} />
         </div>
       </Modal>
-      <Modal show={showConfirmModal} onCancel={cancelDeleteHandler} header='Are you sure?' footerClass='place-item__modal-actions' footer={
-        <React.Fragment>
-          <Button inverse onClick={cancelDeleteHandler}>CANCEL</Button>
-          <Button danger onClick={confirmDeleteHandler}>DELETE</Button>
-        </React.Fragment>
-      }>
+      <Modal
+        show={showConfirmModal}
+        onCancel={cancelDeleteHandler}
+        header="Are you sure?"
+        footerClass="place-item__modal-actions"
+        footer={
+          <React.Fragment>
+            <Button inverse onClick={cancelDeleteHandler}>
+              CANCEL
+            </Button>
+            <Button danger onClick={confirmDeleteHandler}>
+              DELETE
+            </Button>
+          </React.Fragment>
+        }
+      >
         <h4>This action cannot be undone?</h4>
       </Modal>
-      <ErrorModal error={error} onClear={clearError} />
       <li className="place-item">
         <Card className="place-item__content">
+          {isLoading && <Spinner asOverlay />}
           <div className="place-item__image">
             <img src={props.image} alt={props.title} />
           </div>
@@ -89,9 +98,17 @@ const PlaceItem = (props) => {
             <p>{props.description}</p>
           </div>
           <div className="place-item__actions">
-            <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-            {auth.isLoggedIn && <Button to={`/places/${props.id}/update`}>EDIT LOCATION</Button>}
-            {auth.isLoggedIn && <Button danger onClick={showDeleteWarningHandler}>DELETE LOCATION</Button>}
+            <Button inverse onClick={openMapHandler}>
+              VIEW ON MAP
+            </Button>
+            {auth.isLoggedIn && (
+              <Button to={`/places/${props.id}/update`}>EDIT LOCATION</Button>
+            )}
+            {auth.isLoggedIn && (
+              <Button danger onClick={showDeleteWarningHandler}>
+                DELETE LOCATION
+              </Button>
+            )}
           </div>
         </Card>
       </li>
