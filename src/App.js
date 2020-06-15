@@ -17,28 +17,28 @@ import Auth from './user/pages/Auth/Auth';
 import { AuthContext } from './shared/context/auth-context';
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUserId] = useState(null)
+  const [token, setToken] = useState(null);
+  const [userId, setUserId] = useState(null);
 
-  const login = useCallback((uid) => {
-    setIsLoggedIn(true);
-    setUserId(uid)
+  const login = useCallback((uid, token) => {
+    setToken(token);
+    setUserId(uid);
   }, []);
   const logout = useCallback(() => {
-    setIsLoggedIn(false);
-    setUserId(null)
+    setToken(null);
+    setUserId(null);
   }, []);
 
   let routes;
 
-  if (isLoggedIn) {
+  if (token) {
     routes = (
       <Switch>
         <Route exact path="/" component={Users} />
         <Route exact path="/users/:userId/places" component={UserPlaces} />
         <Route exact path="/places/new" component={NewPlaces} />
         <Route exact path="/places/:placeId/update" component={UpdatePlace} />
-        <Route exact path='/logout' component={Users} />
+        <Route exact path="/logout" component={Users} />
         <Redirect to="/" />
       </Switch>
     );
@@ -55,13 +55,17 @@ const App = () => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn: isLoggedIn, userId: userId ,login: login, logout: logout }}
+      value={{
+        isLoggedIn: !!token,
+        token: token,
+        userId: userId,
+        login: login,
+        logout: logout,
+      }}
     >
       <React.Fragment>
         <MainNavigation />
-        <main>
-            {routes}
-        </main>
+        <main>{routes}</main>
         <AuthContext.Provider></AuthContext.Provider>
       </React.Fragment>
     </AuthContext.Provider>

@@ -60,7 +60,7 @@ const Auth = () => {
           }),
           { 'Content-Type': 'application/json' }
         );
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId, responseData.token);
       } catch (error) {
         console.log(error);
       }
@@ -68,7 +68,7 @@ const Auth = () => {
       try {
         const formData = new FormData();
         formData.append('image', formState.inputs.image.value);
-        formData.append('username', formState.inputs.name.value);
+        formData.append('name', formState.inputs.name.value);
         formData.append('email', formState.inputs.email.value);
         formData.append('password', formState.inputs.password.value);
         const responseData = await sendRequest(
@@ -76,7 +76,7 @@ const Auth = () => {
           'POST',
           formData
         );
-        auth.login(responseData.newUser.id);
+        auth.login(responseData.userId, responseData.token);
       } catch (error) {
         console.log(error);
       }

@@ -17,7 +17,7 @@ import { useForm } from '../../../shared/hooks/form-hook';
 
 import { useHttpClient } from '../../../shared/hooks/http-hook';
 
-import { AuthContext } from '../../../shared/context/auth-context'
+import { AuthContext } from '../../../shared/context/auth-context';
 
 import Spinner from '../../../shared/components/UIElements/Error/LoadingSpinner';
 
@@ -32,9 +32,9 @@ const UpdatePlace = () => {
 
   const placeId = useParams().placeId;
 
-  const history = useHistory()
+  const history = useHistory();
 
-  const auth = useContext(AuthContext)
+  const auth = useContext(AuthContext);
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -102,9 +102,12 @@ const UpdatePlace = () => {
           title: formState.inputs.title.value,
           description: formState.inputs.description.value,
         }),
-        { 'Content-Type': 'application/json' }
+        {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
+        }
       );
-      history.push('/users/' + auth.userId + '/places')
+      history.push('/users/' + auth.userId + '/places');
     } catch (error) {}
   };
 
