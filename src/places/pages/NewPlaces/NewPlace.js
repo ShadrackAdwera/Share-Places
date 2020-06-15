@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useContext} from 'react';
+
+import { useHistory } from 'react-router-dom'
 
 import Input from '../../../shared/components/UIElements/FormElements/Inputs/Input';
 
@@ -11,9 +13,19 @@ import {
 
 import { useForm } from '../../../shared/hooks/form-hook';
 
+import { useHttpClient } from '../../../shared/hooks/http-hook';
+
+import { AuthContext } from '../../../shared/context/auth-context'
+
+import Spinner from '../../../shared/components/UIElements/Error/LoadingSpinner'
+
+import ErrorModal from '../../../shared/components/UIElements/Error/ErrorModal'
+
 import './PlaceForm.css';
 
 const NewPlace = () => {
+  const auth = useContext(AuthContext)
+  const history = useHistory()
   const [formState, inputHandler] = useForm(
     {
       title: {
@@ -32,14 +44,33 @@ const NewPlace = () => {
     false
   );
 
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
-  const placeSubmitHandler = (event) => {
+  const placeSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(formState.inputs);
+    try {
+      await sendRequest(
+        'http://localhost:5000/api/places',
+        'POST',
+        JSON.stringify({
+          title: formState.inputs.title.value,
+          description: formState.inputs.description.value,
+          address: formState.inputs.address.value,
+          creator: auth.userId
+        }),
+        { 'Content-Type': 'application/json' }
+      );
+      history.push('/')
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
+    <React.Fragment>
+      <ErrorModal error = {error} onClear = {clearError} />
     <form className="place-form" onSubmit={placeSubmitHandler}>
+      { isLoading && <Spinner asOverlay/> }
       <Input
         id="title"
         element="input"
@@ -70,6 +101,7 @@ const NewPlace = () => {
         ADD PLACE
       </Button>
     </form>
+    </React.Fragment>
   );
 };
 
