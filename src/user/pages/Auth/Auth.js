@@ -22,7 +22,7 @@ import {
   VALIDATOR_REQUIRE,
 } from '../../../shared/utils/Validators';
 
-import ImageUpload from '../../../shared/components/UIElements/FormElements/Image/ImageUpload'
+import ImageUpload from '../../../shared/components/UIElements/FormElements/Image/ImageUpload';
 
 import './Auth.css';
 
@@ -51,7 +51,7 @@ const Auth = () => {
     event.preventDefault();
     if (isLogin) {
       try {
-       const responseData =  await sendRequest(
+        const responseData = await sendRequest(
           'http://localhost:5000/api/users/login',
           'POST',
           JSON.stringify({
@@ -66,15 +66,15 @@ const Auth = () => {
       }
     } else {
       try {
+        const formData = new FormData();
+        formData.append('image', formState.inputs.image.value);
+        formData.append('username', formState.inputs.name.value);
+        formData.append('email', formState.inputs.email.value);
+        formData.append('password', formState.inputs.password.value);
         const responseData = await sendRequest(
           'http://localhost:5000/api/users/signup',
           'POST',
-          JSON.stringify({
-            username: formState.inputs.name.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-          { 'Content-Type': 'application/json' }
+          formData
         );
         auth.login(responseData.newUser.id);
       } catch (error) {
@@ -99,8 +99,8 @@ const Auth = () => {
           },
           image: {
             value: null,
-            isValid: false
-          }
+            isValid: false,
+          },
         },
         false
       );
@@ -116,7 +116,14 @@ const Auth = () => {
         <h3>Authentication Required</h3>
         <hr />
         <form onSubmit={authSubmitHandler}>
-        {!isLogin && <ImageUpload id='image' center onInput={inputHandler}/>}
+          {!isLogin && (
+            <ImageUpload
+              id="image"
+              center
+              onInput={inputHandler}
+              errorText="Provide an image hombre!!!"
+            />
+          )}
           {!isLogin && (
             <Input
               element="input"
