@@ -86,7 +86,7 @@ const Auth = () => {
   const switchModeHandler = () => {
     if (!isLogin) {
       setFormData(
-        { ...formState.inputs, name: undefined },
+        { ...formState.inputs, name: undefined, image: undefined },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
     } else {
@@ -97,6 +97,10 @@ const Auth = () => {
             value: '',
             isValid: false,
           },
+          image: {
+            value: null,
+            isValid: false
+          }
         },
         false
       );
@@ -112,7 +116,7 @@ const Auth = () => {
         <h3>Authentication Required</h3>
         <hr />
         <form onSubmit={authSubmitHandler}>
-        {!isLogin && <ImageUpload id='image' center/>}
+        {!isLogin && <ImageUpload id='image' center onInput={inputHandler}/>}
           {!isLogin && (
             <Input
               element="input"
